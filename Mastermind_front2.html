@@ -1,0 +1,389 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+  		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<style type="text/css">
+			.row div{
+				border: solid black 1px;
+			}
+
+			#board {				
+				height: 70%;				
+			}
+
+			#gameInfo{
+				height: 92%;
+			}
+
+			#matchInfo{
+				height: 15%;
+				margin-bottom: 20px;
+			}
+			
+			td > button{
+				position: relative;
+				float:right;
+				display: block;
+			}
+
+			td > img{
+				height: 40px;
+				text-align:center;
+			}
+
+			td ~ td .chk{
+				background-color: red;
+			}
+
+		</style>
+	</head>
+	
+	<body>
+		<div id="gameScreen" class="container">
+			<div class="row">
+				<div id="gameInfo" class="col-md-5">.col-md-6</div>
+				<div class="col-md-7">
+					<div class="row" id="matchInfo">
+						Players info
+					</div>
+					<table id="board" class="table table-bordered">
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk10">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk9">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk8">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk7">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk6">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk5">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk4">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk3">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk2">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>
+								<table class="table table-bordered chk" id="chk1">
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>	
+								</table>	
+							</td>
+							<td>
+								<button type="button" class="btn btn-default">Check</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<img src="imgs/red.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/blue.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/yellow.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/green.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/purple.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/pink.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/black.png" class="center-block">
+							</td>
+							<td>
+								<img src="imgs/orange.png" class="center-block">
+							</td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+<html>
