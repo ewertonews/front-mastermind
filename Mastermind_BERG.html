@@ -11,10 +11,10 @@
 			tempArray = [];
 			collorArrayToSend = [];
 			gameMode = "singlePlayer";
+			var game;
 
 			function createNewGame(){
 				userName = $("#usr").val();
-				$("#userName").val(userName);
 				if(userName != ""){
 					var qtUsers = 0;
 					if($("#singlePlayerBox").is(':checked')){
@@ -32,39 +32,24 @@
       					cache: false,
 				        url: url
 				    }).done(function (data) {
-
 			        	game = data;
-			        	$("#gameId").val(game.gameName);
 			        	var gameStatus;
 			        	if(game.gameStatus == 1){
-			        		gameStatus = "Waiting for Opponent";
+			        		gameStatus = "WaitingForPlayers";
 			        	}
 			        	else if(game.gameStatus == 2){
-			        		gameStatus = "In progress";
+			        		gameStatus = "InProgress";
 			        	}
 			        	else{
 			        		gameStatus = "Finished";
 			        	}
 			        	//grad stuff from api and set variables
-						
-						if(game.userQt == 1){
-							newRow = '<tr>'+
+						var newRow = '<tr>'+
 								        '<td>' + game.gameName + '</td>' +
-								        '<td>' + game.userQt + '</td>' +
+								        '<td>' + game.userQt + ' / 2</td>' +
 								        '<td>' + gameStatus + '</td>' +
 								        '<td><button type="button" class="btn btn-primary">Join</button></td>'+
 							      	'</tr>';
-						}else{
-							newRow = '<tr>'+
-								        '<td>' + game.gameName + '</td>' +
-								        '<td>' + game.userQt + '/2 </td>' +
-								        '<td>' + gameStatus + '</td>' +
-								        '<td><button type="button" class="btn btn-primary">Join</button></td>'+
-							      	'</tr>';
-						}
-
-							
-
 
 						$("#gameInfo").find("tbody").append(newRow);
 						$("#usr").val("");
@@ -79,23 +64,6 @@
 			}
 
 			function joinExistingGame(){
-				gameIdToJoin = "";
-				userName = $("usr").val();
-				if(userName == ""){
-					alert("you must create a user name first");
-				}else{
-
-					//gameName={gameName}&userName={userName}
-					 $.ajax({
-				        type: "GET",
-				        data: UserGuessModel,
-				        url: "http://mastermindrecifewebapi.azurewebsites.net/api/MasterMindGame/JoinGame?",
-				        contentType: "application/json",
-				        cache: false
-
-				       })
-					//
-				}
 
 			}
 
@@ -108,52 +76,14 @@
 				//binding the click function to all check buttons
 				for (var i = 1; i <= 10; i++) {
 					$("#btnChk_"+i).bind("click", function(){
-						if(filledCells == 8 && $("#gameId").val() != 0){
+						if(filledCells == 8){
 							setFinalGuess();
 							currentRow++;									
 							filledCells = 0;
 							collorArrayToSend = tempArray;
 							tempArray = [];
-							
-							gameName = $("#gameId").val();
-							userName = $("#userName").val();
-							var UserGuessModel = { GameName: gameName, UserName: userName, GameColorsCodes: collorArrayToSend };
-
-							//var UserGuessModel = {'gameName': "'"+gameName+"'",'userName': "'"+userName+"'",'gameColorsCodes':  JSON.stringify(collorArrayToSend)};	
-
-						
-				           
-				           $.ajax({
-				               type: "POST",
-				               data: JSON.stringify(UserGuessModel),
-				               url: "http://mastermindrecifewebapi.azurewebsites.net/api/MasterMindGame/UserGuess",
-				               contentType: "application/json",
-				               cache: false
-
-				           }).done(function (feedback) {
-				           		currentFdbTable = currentRow - 1;
-				           		fdbImgSrc1 = "imgs/white.png";
-				           		fdbImgSrc2 = "imgs/black_7.png";
-
-				           		for (var i = 1; i <= feedback.length; i++) {			           			
-				           			
-
-				           		};
-
-				           		$("#chk"+currentFdbTable).find('td').each(function(i){
-				           			
-				           			if(feedback[i] == 1){
-										$(this).append($('<img>',{src:fdbImgSrc1})).addClass("tblChkImg");
-				           			}else if(feedback[i]==2){
-				           				$(this).append($('<img>',{src:fdbImgSrc2})).addClass("tblChkImg");
-				           			}
-				           		});
-				               //$("#Result").html(msg);
-
-				           });
-							
-
-							//alert("toma! =>" + JSON.stringify(collorArrayToSend));
+							//SEND TO API
+							alert("toma! =>" + JSON.stringify(collorArrayToSend));
 						}else{
 							$("#messages").append('<div class="alert alert-warning" id="warningAlert"><strong>Not yet!</strong> Please place all 8 spheres before checking ;).</div>');
 							$("#warningAlert").fadeTo(4000, 500).slideUp(500, function(){
@@ -349,10 +279,6 @@
 
 			.centerImg{
 				padding-left:3px;		
-			}
-
-			.tblChkImg{
-				height: 100%;
 			}
 
 			#messages{
@@ -778,8 +704,8 @@
 					<div id="messages">
 						Messages	
 					</div>
-					<input type="hidden" id="gameId" value=""></hidden>
-					<input type="hidden" id="userName" value=""></hidden>
+					<input type="hidden" id="gameId"></hidden>
+					<input type="hidden" id="userName"></hidden>
 				</div>
 			</div>
 		</div>
