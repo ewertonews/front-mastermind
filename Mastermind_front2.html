@@ -40,16 +40,9 @@
 
 			$(function(){
 
-				if(gameMode == "singlePlayer"){
-					$("#messages").hide();
-					$("#board").addClass('goCenter');
-					$("#boardSpace").addClass('goCenter');
-					$("#matchInfo").css("width","65%").append('<p>You are playing in single player mode.. :/</p>');
-
-				}else{
-					$("#board").addClass('goLeft');
-					$("#matchInfo").css("width","100%");
-				}
+				/*if(gameMode == "singlePlayer"){
+					$("#matchInfo").append('<p>You are playing in single player mode.. :/</p>');
+				}*/
 
 				//binding the click function to all check buttons
 				for (var i = 1; i <= 10; i++) {
@@ -167,6 +160,7 @@
 
 			#board {				
 				height: 80%;
+				float: left;
 												
 			}
 
@@ -195,6 +189,7 @@
 				margin: 0 auto;
 				//border: solid black 1px;
 				margin-top: 8%;
+				width: 100%;
 			}
 			
 			td > button{
@@ -301,6 +296,11 @@
 					<div class="form-group">
 						<button type="button" class="btn btn-info" onclick="createNewGame()">Create a new game</button><strong>  OR  </strong>
 						<span id="joinExisting">Join an existing one</span>	
+					</div>
+					<div class="form-group">
+						<div class="checkbox">
+						 	<label><input type="checkbox" value="" id="singlePlayerBox">Single player mode</label>
+						</div>
 					</div>
 					<div id="gameInfoTableContainer">
 					<table class="table table-striped" id="gameInfo">
