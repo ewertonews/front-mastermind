@@ -10,9 +10,46 @@
 			filledCells = 0;
 			tempArray = [];
 			collorArrayToSend = [];
-			checked = false;
+			gameMode = "singlePlayer";
+
+			function createNewGame(){
+				userName = $("#usr").val();
+				if(userName != ""){
+					//grad stuff from api and set variables
+					var newRow = '<tr>'+
+							        '<td>#1</td>' +
+							        '<td>1 / 2</td>' +
+							        '<td>Waiting for Opponent</td>' +
+							        '<td><button type="button" class="btn btn-primary">Join</button></td>'+
+						      	'</tr>';
+
+					$("#gameInfo").find("tbody").append(newRow);
+					$("#usr").val("");
+				}else{
+					$("#messages").append('<div class="alert alert-warning" id="warningAlert"><strong>Hey!</strong> Don\'t forget to choose a user name ;)</div>');
+						$("#warningAlert").fadeTo(4000, 500).slideUp(500, function(){
+							$("#success-alert").alert('close');
+							$(this).remove();
+						});
+				}
+			}
+
+			function joinExistingGame(){
+
+			}
 
 			$(function(){
+
+				if(gameMode == "singlePlayer"){
+					$("#messages").hide();
+					$("#board").addClass('goCenter');
+					$("#boardSpace").addClass('goCenter');
+					$("#matchInfo").css("width","65%").append('<p>You are playing in single player mode.. :/</p>');
+
+				}else{
+					$("#board").addClass('goLeft');
+					$("#matchInfo").css("width","100%");
+				}
 
 				//binding the click function to all check buttons
 				for (var i = 1; i <= 10; i++) {
@@ -23,7 +60,15 @@
 							filledCells = 0;
 							collorArrayToSend = tempArray;
 							tempArray = [];
+							//SEND TO API
 							alert("toma! =>" + JSON.stringify(collorArrayToSend));
+						}else{
+							$("#messages").append('<div class="alert alert-warning" id="warningAlert"><strong>Not yet!</strong> Please place all 8 spheres before checking ;).</div>');
+							$("#warningAlert").fadeTo(4000, 500).slideUp(500, function(){
+								$("#success-alert").alert('close');
+								$(this).remove();
+							});
+
 						}
 					})					
 				};
@@ -49,27 +94,48 @@
 					};					
 				}
 
+				
 
-				imageUrl = "imgs/empty.png";
+
+				cellBgImageUrl = "imgs/empty.png";
+				p1cellBgImageUrl = "imgs/player1row.png";
+				p2cellBgImageUrl = "imgs/player2row.png";
+				
 				var boardTableCell = $("#board").find("td").each(function(){					
-					if(this.cellIndex < 8 && !$(this).hasClass('base')){
-						$(this).css({'background-image':'url(' + imageUrl + ')', 'background-size': '100% 100%'});
+					//check if the cell is part of the game board
+					if(this.cellIndex < 8 && !$(this).hasClass('base')){												
+						
 						if($(this).parent().attr("id") !== undefined){
-							//console.log($(this).parent().attr("id"))
+
 							var parentId = $(this).parent().attr("id");	
+							
 							var rowNumber = parentId.split("_")[1]
+
+							if(gameMode == "singlePlayer"){
+								$(this).css({'background-image':'url(' + cellBgImageUrl + ')', 'background-size': '100% 100%'});	
+							}else{
+								//alert(parentId);
+								if(rowNumber % 2 == 0){
+									$(this).css({'background-image':'url(' + p2cellBgImageUrl + ')', 'background-size': '100% 100%'});
+								}else{
+									$(this).css({'background-image':'url(' + p1cellBgImageUrl + ')', 'background-size': '100% 100%'});
+								}
+							}
+							//console.log($(this).parent().attr("id"))						
+							
 							$(this).addClass("cell_" + rowNumber + "_" + (this.cellIndex + 1))
+					
 							$(this).bind("click", function(){
 								var imgSrc = $("#selectedColor img").attr("src");
 								var clickedRowNumber = $(this).attr("class").split("_")[1];
 								
 								if(imgSrc != "" && allowSphereHere(clickedRowNumber)){
 									if ($(this).find("img").length == 0){
-										$(this).append($('<img>',{src:imgSrc,height:36}));
+										$(this).append($('<img>',{src:imgSrc,height:34})).addClass('centerImg');
 										filledCells++;	
 									}else{
 										$(this).empty();
-										$(this).append($('<img>',{src:imgSrc,height:36}));
+										$(this).append($('<img>',{src:imgSrc,height:34})).addClass('centerImg');
 									}	
 								}
 								if(filledCells == 8){									
@@ -100,19 +166,35 @@
 			}
 
 			#board {				
-				height: 70%;						
+				height: 80%;
+												
+			}
+
+			.goLeft{
+				float: left;
+			}
+
+			.goCenter{
+				margin: 0 auto;		
 			}
 
 
-			#gameInfo{
+			#gameInfoArea{
 				height: 92%;
 				padding-top: 90px;
 				//border: solid black 1px;
 			}
 
+			#gameInfoTableContainer{
+				height: 80%;
+				overflow: auto;
+			}
+
 			#matchInfo{
 				height: 10%;
-				margin-bottom: 20px;
+				margin: 0 auto;
+				//border: solid black 1px;
+				margin-top: 8%;
 			}
 			
 			td > button{
@@ -138,16 +220,51 @@
 			}
 			.chk{
 			    margin-bottom: 0px;
+			    margin-left: 5px;
+			    padding-right: 0px;
+			    max-width: 60%;
+			}
+
+			.chk td{
+				background-image: url("imgs/empty.png");
+				background-size: 100% 100%;
 			}
 
 			.base{
 				background-color: #060e4c;
 				border: none !important;
 				color: white;
+				font-size: 13px;
+				word-wrap: break-word;
 			}
 
 			.btnChk{
 				visibility: hidden;
+			}
+
+			[id^="btnChk_"] {
+  				padding: 5px 10px;
+    			font-size: 12px;
+   				border-radius: 3px;
+   				margin: 0 3px 0 3px;
+			}
+
+			#selectedColor{
+				padding-left: 10px;
+			}
+
+			.centerImg{
+				padding-left:3px;		
+			}
+
+			#messages{
+				position: relative;
+				float: right;
+				//border: solid 1px black;
+				height: 80%;
+				width: 250px;
+				margin-right: 0;
+				margin-left: 0;
 			}
 
 		</style>
@@ -155,17 +272,38 @@
 	
 	<body>
 		<div id="gameScreen" class="container">
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+		      <div class="container">
+		        <div class="navbar-header">
+		          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		            <span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		          </button>
+		          <a class="navbar-brand" href="http://getbootstrap.com/examples/starter-template/#">MasterMind Recife</a>
+		        </div>
+		        <div id="navbar" class="collapse navbar-collapse">
+		          <ul class="nav navbar-nav">
+		            <li class="active"><a href="http://getbootstrap.com/examples/starter-template/#">Home</a></li>
+		            <li><a href="http://getbootstrap.com/examples/starter-template/#about">About</a></li>
+		            <li><a href="http://getbootstrap.com/examples/starter-template/#contact">Contact</a></li>
+		          </ul>
+		        </div><!--/.nav-collapse -->
+		      </div>
+		    </nav>
 			<div class="row">
-				<div id="gameInfo" class="col-md-5">
+				<div id="gameInfoArea" class="col-md-4">
 					<div class="form-group">
 						<label for="usr">Enter your username:</label>
 						<input type="text" class="form-control" id="usr">
 					</div>
 					<div class="form-group">
-						<button type="button" class="btn btn-info">Create a new game</button><strong>  OR  </strong>
+						<button type="button" class="btn btn-info" onclick="createNewGame()">Create a new game</button><strong>  OR  </strong>
 						<span id="joinExisting">Join an existing one</span>	
 					</div>
-					<table class="table table-striped">
+					<div id="gameInfoTableContainer">
+					<table class="table table-striped" id="gameInfo">
 					    <thead>
 					      <tr>
 					        <th>Game ID</th>
@@ -175,26 +313,16 @@
 					      </tr>
 					    </thead>
 					    <tbody>
-					      <tr>
-					        <td>#1</td>
-					        <td>2 / 2</td>
-					        <td>In Progress</td>
-					        <td><button type="button" class="btn btn-primary">Watch</button></td>
-					      </tr>
-					      <tr>
-					        <td>#2</td>
-					        <td>1 / 2</td>
-					        <td>Waiting for Opponent</td>
-					        <td><button type="button" class="btn btn-success">Join</button></td>
-					      </tr>					     
+					     			     
 					    </tbody>
 					  </table>
+					  </div>
 				</div>
-				<div class="col-md-7">
+				<div class="col-md-8" id="boardSpace">
 					<div class="row" id="matchInfo">
 						
 					</div>
-					<table id="board" class="table table-bordered">
+					<table id="board" class="table-responsive table-bordered">
 						<tr id="hiddenspheres">
 							<td>
 								<img src="imgs/hidden-color.png" class="center-block">
@@ -544,6 +672,11 @@
 							</td>
 						</tr>
 					</table>
+					<div id="messages">
+						Messages	
+					</div>
+					<input type="hidden" id="gameId"></hidden>
+					<input type="hidden" id="userName"></hidden>
 				</div>
 			</div>
 		</div>
