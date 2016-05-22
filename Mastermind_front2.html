@@ -135,20 +135,22 @@
 				           		fdbImgSrc1 = "imgs/white.png";
 				           		fdbImgSrc2 = "imgs/black_7.png";
 
-				           		for (var i = 1; i <= feedback.length; i++) {			           			
-				           			
+				           		qtdFdb = 0;
 
-				           		};
+				           		for (var i = 0; i < feedback.length; i++) { 
 
-				           		$("#chk"+currentFdbTable).find('td').each(function(i){
 				           			
 				           			if(feedback[i] == 1){
-										$(this).append($('<img>',{src:fdbImgSrc1})).addClass("tblChkImg");
+										$($("#chk"+currentFdbTable).find('td')[qtdFdb]).append($('<img>',{src:fdbImgSrc1,height:15})).addClass("tblChkImg");
+										qtdFdb++;
 				           			}else if(feedback[i]==2){
-				           				$(this).append($('<img>',{src:fdbImgSrc2})).addClass("tblChkImg");
+				           				$($("#chk"+currentFdbTable).find('td')[qtdFdb]).append($('<img>',{src:fdbImgSrc2,height:15})).addClass("tblChkImg");
+				           				qtdFdb++;
 				           			}
-				           		});
-				               //$("#Result").html(msg);
+
+
+
+				           		};
 
 				           });
 							
@@ -351,9 +353,10 @@
 				padding-left:3px;		
 			}
 
-			.tblChkImg{
-				height: 100%;
+			.tblChkImg img{
+				
 			}
+
 
 			#messages{
 				position: relative;
