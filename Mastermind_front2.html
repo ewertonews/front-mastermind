@@ -3,18 +3,111 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
   		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" ></script>
   		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			currentRow = 1;
+			filledCells = 0;
+			tempArray = [];
+			collorArrayToSend = [];
+			checked = false;
+
+			$(function(){
+
+				//binding the click function to all check buttons
+				for (var i = 1; i <= 10; i++) {
+					$("#btnChk_"+i).bind("click", function(){
+						if(filledCells == 8){
+							setFinalGuess();
+							currentRow++;									
+							filledCells = 0;
+							collorArrayToSend = tempArray;
+							tempArray = [];
+							alert("toma! =>" + JSON.stringify(collorArrayToSend));
+						}
+					})					
+				};
+				
+				function allowSphereHere(row_number){
+					if(row_number == currentRow){
+						return true;
+					}else{
+						return false;
+					}
+				}
+
+				function getSphereNumber(selected_sphere_img_src){
+					var sphereNumber = selected_sphere_img_src.split("_")[1].split(".")[0]
+					return sphereNumber;
+				}
+
+				function setFinalGuess(){
+					for (var i = 1; i <= 8; i++) {
+						cell = $(".cell_"+currentRow + "_"+i)
+						var sphereNumber = getSphereNumber(cell.find("img").attr("src"));
+						tempArray.push(sphereNumber);
+					};					
+				}
+
+
+				imageUrl = "imgs/empty.png";
+				var boardTableCell = $("#board").find("td").each(function(){					
+					if(this.cellIndex < 8 && !$(this).hasClass('base')){
+						$(this).css({'background-image':'url(' + imageUrl + ')', 'background-size': '100% 100%'});
+						if($(this).parent().attr("id") !== undefined){
+							//console.log($(this).parent().attr("id"))
+							var parentId = $(this).parent().attr("id");	
+							var rowNumber = parentId.split("_")[1]
+							$(this).addClass("cell_" + rowNumber + "_" + (this.cellIndex + 1))
+							$(this).bind("click", function(){
+								var imgSrc = $("#selectedColor img").attr("src");
+								var clickedRowNumber = $(this).attr("class").split("_")[1];
+								
+								if(imgSrc != "" && allowSphereHere(clickedRowNumber)){
+									if ($(this).find("img").length == 0){
+										$(this).append($('<img>',{src:imgSrc,height:36}));
+										filledCells++;	
+									}else{
+										$(this).empty();
+										$(this).append($('<img>',{src:imgSrc,height:36}));
+									}	
+								}
+								if(filledCells == 8){									
+									$("#btnChk_"+currentRow).removeClass("btnChk");									
+								}														
+
+							});
+						}
+					}
+					if(this.cellIndex >= 8){
+						$(this).addClass('base');
+					}
+				});	
+
+				$("#spheres").find("img").each(function(){
+					$(this).bind("click", function(){
+						$("#selectedColor img").attr("src", $(this).attr("src"));
+					})
+				});			
+				
+			})				
+			
+
+		</script>
 		<style type="text/css">
 			.row div{
-				border: solid black 1px;
+				//border: solid black 1px;
 			}
 
 			#board {				
-				height: 70%;				
+				height: 70%;						
 			}
+
 
 			#gameInfo{
 				height: 92%;
+				padding-top: 90px;
+				//border: solid black 1px;
 			}
 
 			#matchInfo{
@@ -29,15 +122,17 @@
 			}
 
 			td > img{
-				height: 34px;
+				height: 40px;
 				text-align:center;
 			}
 
 			.table td ~ td .chk{
     			background-color: red;
+    			height: 30%;  
+    			width:40%;
 			}
 
-			td ~ td button{
+			.table td ~ td button{
 			    margin-bottom: 0px;
 			    margin-left: 0px !important;
 			}
@@ -45,7 +140,15 @@
 			    margin-bottom: 0px;
 			}
 
-			
+			.base{
+				background-color: #060e4c;
+				border: none !important;
+				color: white;
+			}
+
+			.btnChk{
+				visibility: hidden;
+			}
 
 		</style>
 	</head>
@@ -53,13 +156,46 @@
 	<body>
 		<div id="gameScreen" class="container">
 			<div class="row">
-				<div id="gameInfo" class="col-md-5">.col-md-6</div>
+				<div id="gameInfo" class="col-md-5">
+					<div class="form-group">
+						<label for="usr">Enter your username:</label>
+						<input type="text" class="form-control" id="usr">
+					</div>
+					<div class="form-group">
+						<button type="button" class="btn btn-info">Create a new game</button><strong>  OR  </strong>
+						<span id="joinExisting">Join an existing one</span>	
+					</div>
+					<table class="table table-striped">
+					    <thead>
+					      <tr>
+					        <th>Game ID</th>
+					        <th>Players</th>
+					        <th>Status</th>
+					        <th>Action</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+					      <tr>
+					        <td>#1</td>
+					        <td>2 / 2</td>
+					        <td>In Progress</td>
+					        <td><button type="button" class="btn btn-primary">Watch</button></td>
+					      </tr>
+					      <tr>
+					        <td>#2</td>
+					        <td>1 / 2</td>
+					        <td>Waiting for Opponent</td>
+					        <td><button type="button" class="btn btn-success">Join</button></td>
+					      </tr>					     
+					    </tbody>
+					  </table>
+				</div>
 				<div class="col-md-7">
 					<div class="row" id="matchInfo">
-						Players info
+						
 					</div>
 					<table id="board" class="table table-bordered">
-						<tr>
+						<tr id="hiddenspheres">
 							<td>
 								<img src="imgs/hidden-color.png" class="center-block">
 							</td>
@@ -87,7 +223,7 @@
 							<td></td>
 							<td></td>
 						</tr>
-						<tr>
+						<tr id="row_10">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -113,10 +249,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_10">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_9">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -142,10 +278,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_9">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_8">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -171,10 +307,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_8">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_7">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -200,10 +336,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_7">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_6">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -229,10 +365,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_6">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_5">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -258,10 +394,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_5">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_4">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -287,10 +423,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_4">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_3">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -316,10 +452,10 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_3">Check</button>
 							</td>
 						</tr>
-						<tr>
+						<tr id="row_2">
 							<td></td>
 							<td></td>
 							<td></td>
@@ -345,13 +481,11 @@
 								</table>
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default btnChk" id="btnChk_2">Check</button>
 							</td>
 						</tr>
-						<tr>
-							<td>
-								
-							</td>
+						<tr id="row_1">
+							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -376,36 +510,38 @@
 								</table>	
 							</td>
 							<td>
-								<button type="button" class="btn btn-default">Check</button>
+								<button type="button" class="btn btn-default" id="btnChk_1">Check</button>
 							</td>
 						</tr>
-						<tr>
-							<td>
-								<img src="imgs/red.png" class="center-block">
+						<tr id="spheres">
+							<td class="base">
+								<img src="imgs/red_1.png" class="center-block" id="sphere_1">
 							</td>
-							<td>
-								<img src="imgs/blue.png" class="center-block">
+							<td class="base">
+								<img src="imgs/blue_2.png" class="center-block sphere" id="sphere_2">
 							</td>
-							<td>
-								<img src="imgs/yellow.png" class="center-block">
+							<td class="base">
+								<img src="imgs/yellow_3.png" class="center-block sphere" id="sphere_3">
 							</td>
-							<td>
-								<img src="imgs/green.png" class="center-block">
+							<td class="base">
+								<img src="imgs/green_4.png" class="center-block sphere" id="sphere_4">
 							</td>
-							<td>
-								<img src="imgs/purple.png" class="center-block">
+							<td class="base">
+								<img src="imgs/purple_5.png" class="center-block sphere" id="sphere_5">
 							</td>
-							<td>
-								<img src="imgs/pink.png" class="center-block">
+							<td class="base">
+								<img src="imgs/pink_6.png" class="center-block sphere" id="sphere_6">
 							</td>
-							<td>
-								<img src="imgs/black.png" class="center-block">
+							<td class="base">
+								<img src="imgs/black_7.png" class="center-block sphere" id="sphere_7">
 							</td>
-							<td>
-								<img src="imgs/orange.png" class="center-block">
+							<td class="base">
+								<img src="imgs/orange_8.png" class="center-block sphere" id="sphere_8">
 							</td>
-							<td></td>
-							<td></td>
+							<td class="base">Selected Color:</td>
+							<td class="base" id="selectedColor">
+								<img src="">
+							</td>
 						</tr>
 					</table>
 				</div>
